@@ -648,11 +648,15 @@ async function startScan() {
       {
         fps: 10,
         qrbox: (w, h) => {
-          const e = Math.floor(Math.min(w, h) * 0.85);  // 0.72 → 0.85 に拡大
-          return { width: e, height: e };
-        },
-        aspectRatio: 1.0,           // 映像の歪みを防ぐ
-        disableFlip: false          // 鏡像QRも読む
+          const edge = Math.floor(Math.min(w, h) * 0.7);
+          const size = Math.max(50, edge);
+          return { width: size, height: size };
+        }
+      },
+      async (decodedText) => {
+        if (!isScanning) return;
+        await stopScan();
+        handleCode(decodedText);
       },
       () => {}
     );
